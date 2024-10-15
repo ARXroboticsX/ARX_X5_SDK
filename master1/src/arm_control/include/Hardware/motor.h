@@ -65,7 +65,6 @@ typedef struct
 } OD_Motor_Msg;
 
 extern OD_Motor_Msg rv_motor_msg[10];
-extern int motor_signal[8];
 extern uint16_t motor_id_check;
 extern float magic_pos[3];
 extern float magic_angle[3];

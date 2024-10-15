@@ -7,7 +7,6 @@
 #include "Hardware/motor.h"
 #include "Hardware/teleop.h"
 #include "App/arm_control.h"
-// #include "App/arm_control.cpp"
 #include "App/keyboard.h"
 #include "App/play.h"
 #include "App/solve.h"
@@ -55,6 +54,10 @@ int main(int argc, char **argv)
                                                             ARX_ARM.ros_control_spd_t[5] = msg->joint_vel[5];
                                                             ARX_ARM.ros_control_spd_t[6] = msg->joint_vel[6];
 
+
+
+
+                                                            //   ARX_ARM.record_mode = msg->mode;
                                                         });
 
                             ros::Publisher pub_current = node.advertise<arm_control::JointInformation>("joint_information", 10);
@@ -88,14 +91,24 @@ int main(int argc, char **argv)
                     //发送关节数据
                                 arm_control::JointInformation msg_joint;   
 
-                                for(int i=0;i<7;i++)
+                                for(int i=0;i<6;i++)
                                 {
                                     msg_joint.joint_pos[i] = ARX_ARM.current_pos[i];
                                     msg_joint.joint_vel[i] = ARX_ARM.current_vel[i];
                                     msg_joint.joint_cur[i] = ARX_ARM.current_torque[i];
                                 }    
 
-
+                                msg_joint.joint_pos[6]= ARX_ARM.current_pos[6];
+                                msg_joint.joint_vel[6]= ARX_ARM.current_vel[6];
+                                if(ARX_ARM.current_vel[6]<2)
+                                {
+                                    // msg_joint.joint_cur[6]=-ARX_ARM.current_torque[6];  //0.3
+                                    // msg_joint.joint_cur[6]=-ARX_ARM.Data_process(ARX_ARM.current_torque[6]); 
+                                }
+                                else
+                                {
+                                    msg_joint.joint_cur[6]=0;  //0.3
+                                }
                                 pub_current.publish(msg_joint);
 
                     //发送末端姿态

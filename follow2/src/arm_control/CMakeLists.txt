@@ -51,9 +51,10 @@ include
 )
 
 
-
 add_executable(arm_node4 src/arx_5v.cpp)
 add_dependencies(arm_node4 ${PROJECT_NAME}_gencfg)
+
+
 
 
 
@@ -84,6 +85,7 @@ endif()
 install(TARGETS arm_node4
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
 
 
 install(DIRECTORY

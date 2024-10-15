@@ -31,6 +31,10 @@
 #include <memory.h>
 #include <dirent.h>
 #include <vector>
+#include "../Hardware/motor.h"
+#include <ros/ros.h>
+#include <ros/package.h>
+#include "../Hardware/can.h"
 // #include <sensor_msgs/JointState.h>
 
 // #include <geometry_msgs/Vector3.h>
@@ -135,9 +139,9 @@ public:
     // Save the coordinates on previous round
     float prev_x = 0, prev_y = 0, prev_z = 0, prev_roll = 0, prev_pitch = 0, prev_yaw = 0, prev_base_yaw = 0;
 
-    void solve_init(std::string file_list_t);
+    void solve_init();
     void calc_joint_acc(command arx_cmd_t);
-    void arm_calc1(command arx_cmd_t,float *back_pos,bool control_mode_t);
+    void arm_calc1(command arx_cmd_t,float *back_pos,bool control_mode_t,float* pos2,float *motor_speed,bool teach_mode);
     arx5_state arm_calc2(command arx_cmd_t,float *back_pos,float *send_pos,bool control_mode_t,float gripper);
 
     // arx5_state arm_calc2(command arx_cmd_t,float *back_pos,float *send_pos,bool control_mode_t);
@@ -154,9 +158,25 @@ public:
     void init_pos(float* target_pos, float* current_pos,float * target_pos_temp,bool &is_starting,bool &is_arrived ,bool &teach2pos_returning,int &temp_init);
     // void init_pos(float* target_pos, float* current_pos,float * target_pos_temp,bool* is_starting,bool* is_arrived ,bool* teach2pos_returning,int* temp_init);
 
+    float get_joint(float *current_pos,float *current_vel,float*current_torque,OD_Motor_Msg * motor_msg,bool &current_normal);
 
+
+    // int calc_init=0;
+
+    can CAN_Handlej;
+    float torque_temp[7]={};
+    int motor_signal_t[8] = {};
+    float current_vel_t[7] = {0.0};
+    float current_torque_t[7] = {0.0f};
+    int temp_current_normal=0;
+    int gripper_normal_t=0;
+    bool temp_condition=true;
+    float J13_KP=150,J13_KD=1;
+    float target_pos_temps[7]={};
 
     int calc_init=0;
+    float joint_control_pos_t[7]={};
+
 
 private:
 

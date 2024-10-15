@@ -52,7 +52,7 @@ include
 
 
 
-add_executable(arm_node src/arx_5v.cpp)
+add_executable(arm_node src/arx.cpp)
 add_dependencies(arm_node ${PROJECT_NAME}_gencfg)
 
 

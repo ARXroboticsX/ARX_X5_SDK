@@ -96,12 +96,8 @@ public:
     unsigned int loop_rate = 200;
 
     float current_pos[7] = {};
-    int motor_signal_t[8] = {};
-    int motor_signal_last_t[8] = {};
     float current_vel[7] = {0.0};
-    float current_vel_t[7] = {0.0};
     float current_torque[7] = {0.0f};
-    float current_torque_t[7] = {0.0f};
     float target_pos[7] = {0.0f}, last_target_pos[7] = {0.0f};
     float gripper_pos[1]={};
     float target_pos_temp[7] = {0.0f};
@@ -110,6 +106,11 @@ public:
     float ros_control_pos_t[7] ={};
     float ros_control_vel[7] ={};
     float ros_control_cur[7] ={};
+
+    float current_vel_t[7] = {};
+    float current_torque_t[7] = {};
+    int motor_signal_t[7]={};
+    int safe_mode_4=0;
 
     float lower_bound_waist[3] = {  0.0, -0.4, -0.4};
     float upper_bound_waist[3] = {  0.4,  0.4,  0.4};
@@ -184,7 +185,6 @@ public:
     std::vector<std::string> teach_file_list;
     bool current_normal=true;
     int temp_current_normal=0;
-    int gripper_normal_t=0;
     bool temp_condition=true;
     int temp_init=0;
     float init_kp=0,init_kp_4=0,init_kp_5=0,init_kd=0,init_kd_4=0,init_kd_6=0;
@@ -204,11 +204,17 @@ public:
     int play_gripper=0;
     void limit_joint(float* Set_Pos);
     int teach_flag=0;
+
 private:
 
     float test_pos = 0;
     uint test_cnt = 0;
 
+    LowPassFilter *z_fd_filter;
+    LowPassFilter *joint_vel_filter[8];
+    LowPassFilter *target_vel_filter[8];
+
+   
 };
 
 #endif
